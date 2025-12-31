@@ -9,7 +9,6 @@
 - [New Features (v2.2)](#new-features-v22)
 - [How It Works](#how-it-works)
 - [Tech Stack](#tech-stack)
-- [Getting Started](#getting-started)
 - [Configuration](#configuration)
 - [Output Examples](#output-examples)
 
@@ -23,84 +22,40 @@ Instead of manually refreshing news feeds, this actor monitors tickers across gl
 ## 🚀 New Features (v2.2)
 * **🌍 Multi-Region Support:** Automatically routes news searches based on ticker suffix:
     * `NVDA` → US News
-    * `RVNL.NS` / `RELIANCE.BO` → India News
+    * `RVNL.NS` → India News
     * `RR.L` → UK News
 * **🧠 Multi-Model AI:** Choose your preferred intelligence provider:
     * **OpenAI** (GPT-4o, GPT-3.5)
     * **Anthropic** (Claude 3.5 Sonnet/Haiku)
     * **Google** (Gemini 1.5 Pro/Flash)
-    * **OpenRouter** (Fallback)
-* **🛡️ Robust JSON Parsing:** New fail-safe parser prevents "Unexpected token" errors from chatty AI responses.
-
-## ⚙️ How It Works
-1.  **Target Identification:** Monitors user list OR auto-discovers trending stocks via Yahoo Finance.
-2.  **Volatility Detection:** Filters stocks based on % change threshold.
-3.  **Smart Context Retrieval:** * Detects region from ticker (e.g., `.NS` = India).
-    * Scrapes Google News (Local Edition) using `got-scraping`.
-4.  **AI Analysis:** Feeds context to the selected LLM to classify the event (Earnings, Macro, Merger) and summarize the reason.
-5.  **Reporting:** Sends color-coded Discord alerts and builds an HTML dashboard.
-
-## 🛠️ Tech Stack
-* **Runtime:** Node.js (ES Modules)
-* **Platform:** Apify SDK
-* **AI SDKs:** `openai`, `@anthropic-ai/sdk`, `@google/generative-ai`
-* **Scraping:** `cheerio`, `got-scraping`, `jsdom`, `@mozilla/readability`
+* **📧 Email & Discord Alerts:** Get notified instantly via a rich HTML email or a Discord webhook.
+* **📊 HTML Dashboard:** Generates a visual report of all daily moves (accessible via Public URL).
 
 ---
 
-## 🚀 Getting Started
-
-### Prerequisites
-* Node.js 18+ installed.
-* Apify CLI (`npm install -g apify-cli`).
-* At least one API Key (OpenAI, Anthropic, Gemini, or OpenRouter).
-
-### Installation
-1.  **Clone the repo**
-    ```bash
-    git clone [https://github.com/yourusername/market-reaction-intelligence.git](https://github.com/yourusername/market-reaction-intelligence.git)
-    cd market-reaction-intelligence
-    ```
-2.  **Install dependencies**
-    ```bash
-    npm install
-    ```
-3.  **Local Configuration**
-    Create a `.env` file for local testing:
-    ```env
-    OPENAI_API_KEY=sk-...
-    # or
-    GEMINI_API_KEY=...
-    ```
-
-### Deployment to Apify
-This project uses the `.actor` folder structure for schema definitions.
-
-1.  **Login to Apify**
-    ```bash
-    apify login
-    ```
-2.  **Push to Cloud**
-    ```bash
-    apify push
-    ```
-3.  **Configure Inputs**
-    Go to the Apify Console -> Actor -> Input tab and paste your API keys there.
+## ⚙️ How It Works
+1.  **Target Identification:** Monitors user list OR auto-discovers trending stocks via Yahoo Finance.
+2.  **Volatility Detection:** Filters stocks based on your % change threshold.
+3.  **Smart Context Retrieval:** Detects the region from the ticker (e.g., `.NS` = India) and scrapes relevant local news.
+4.  **AI Analysis:** Feeds context to the selected LLM to classify the event (Earnings, Macro, Merger) and summarize the reason.
+5.  **Reporting:** Sends alerts and builds a public dashboard.
 
 ---
 
 ## 💻 Configuration (`INPUT.json`)
 
-You can mix and match tickers from different countries.
+You can mix and match tickers from different countries and choose your alert methods.
 
-| Parameter | Description | Example |
+| Parameter | Type | Description |
 | :--- | :--- | :--- |
-| `tickers` | List of stocks. Use suffixes for non-US. | `["NVDA", "RVNL.NS", "RR.L"]` |
-| `threshold` | Minimum % change to trigger analysis. | `3.0` |
-| `openaiApiKey` | Key for GPT models. | `sk-...` |
-| `geminiApiKey` | Key for Google Gemini. | `AIza...` |
-| `anthropicApiKey`| Key for Claude. | `sk-ant...` |
-| `discordWebhook` | URL for Discord alerts. | `https://discord.com...` |
+| `tickers` | Array | List of stocks. Use suffixes for non-US (e.g., `["RVNL.NS", "TSLA"]`). |
+| `threshold` | Number | Minimum % change to trigger analysis (Default: `3.0`). |
+| `openaiApiKey` | String | Key for GPT models. |
+| `geminiApiKey` | String | Key for Google Gemini. |
+| `anthropicApiKey`| String | Key for Claude. |
+| `discordWebhook` | String | URL for Discord channel alerts. |
+| `sendEmail` | Boolean | Set to `true` to receive email reports. |
+| `recipientEmail` | String | (Optional) Email address. Defaults to your Apify account email. |
 
 **Example Input:**
 ```json
@@ -109,6 +64,7 @@ You can mix and match tickers from different countries.
     "threshold": 2.5,
     "geminiApiKey": "AIzaSyD...",
     "geminiModel": "gemini-1.5-flash",
+    "sendEmail": true,
     "discordWebhook": "[https://discord.com/api/webhooks/](https://discord.com/api/webhooks/)..."
 }
 
@@ -118,14 +74,15 @@ You can mix and match tickers from different countries.
 
 ## 📊 Output Examples
 
-### Discord Alert
+### 1. Email Alert
 
-> **RVNL.NS 🚀 +5.20%**
-> **Price:** ₹450.00
-> **Reason:** Rail Vikas Nigam Ltd shares surged after winning a ₹500 Cr order from South Central Railway.
-> *Event: CONTRACT • Apify Intelligence*
+> **Subject:** 📢 RVNL.NS Moved +5.20%
+> **RVNL.NS (+5.20%)**
+> **Price:** ₹450.00 • **Event Type:** CONTRACT
+> **Why?**
+> Rail Vikas Nigam Ltd shares surged after winning a ₹500 Cr order from South Central Railway.
 
-### JSON Dataset Item
+### 2. JSON Dataset Item
 
 ```json
 {
@@ -153,7 +110,3 @@ Contributions are welcome!
 ## 📜 License
 
 Distributed under the MIT License.
-
-```
-
-```
