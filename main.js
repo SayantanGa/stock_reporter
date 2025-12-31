@@ -291,11 +291,18 @@ for (const stock of volatileStocks) {
         });
     }
 
-    // FEATURE 3: Email Notification (Restored)
+    // FEATURE 3: Email Notification 
     if (sendEmail) {
         try {
-            // Use provided email or fallback to the Apify account owner's email
-            const userEmail = recipientEmail || (await Actor.getUser())?.email;
+            // 1. Determine the recipient
+            let userEmail = recipientEmail;
+
+            // 2. If no recipient provided, fetch the owner's email via Client
+            if (!userEmail) {
+                const client = Actor.newClient();
+                const user = await client.user().get();
+                userEmail = user?.email;
+            }
             
             if (userEmail) {
                 console.log(`   📧 Sending email to ${userEmail}...`);
