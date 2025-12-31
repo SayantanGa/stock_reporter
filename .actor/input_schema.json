@@ -1,0 +1,68 @@
+{
+  "title": "Market Reaction Intelligence",
+  "type": "object",
+  "schemaVersion": 1,
+  "properties": {
+    "tickers": {
+      "title": "Stock Tickers",
+      "type": "array",
+      "description": "List of tickers (e.g., NVDA, RVNL.NS, RELIANCE.BO). If empty, auto-discovers trending.",
+      "editor": "stringList",
+      "default": []
+    },
+    "useTrending": {
+      "title": "Auto-Discover Trending",
+      "type": "boolean",
+      "description": "If no tickers provided, find top movers automatically.",
+      "default": true
+    },
+    "threshold": {
+      "title": "Volatility Threshold (%)",
+      "type": "number",
+      "description": "Minimum move percentage to trigger analysis.",
+      "default": 3.0
+    },
+    "openaiApiKey": {
+      "title": "OpenAI API Key",
+      "type": "string",
+      "description": "Key for GPT-4o / GPT-3.5",
+      "editor": "textfield",
+      "isSecret": true
+    },
+    "anthropicApiKey": {
+      "title": "Anthropic API Key",
+      "type": "string",
+      "description": "Key for Claude 3.5 Sonnet / Haiku",
+      "editor": "textfield",
+      "isSecret": true
+    },
+    "geminiApiKey": {
+      "title": "Google Gemini API Key",
+      "type": "string",
+      "description": "Key for Gemini 1.5 Pro / Flash",
+      "editor": "textfield",
+      "isSecret": true
+    },
+    "openRouterKey": {
+      "title": "OpenRouter API Key (Fallback)",
+      "type": "string",
+      "description": "Key for OpenRouter access.",
+      "editor": "textfield",
+      "isSecret": true
+    },
+    "discordWebhook": {
+      "title": "Discord Webhook URL",
+      "type": "string",
+      "description": "Post alerts directly to a chat channel.",
+      "editor": "textfield"
+    },
+    "proxyConfiguration": {
+      "title": "Proxy Configuration",
+      "type": "object",
+      "description": "Required to scrape Google/Yahoo without blocking.",
+      "editor": "proxy",
+      "default": { "useApifyProxy": true }
+    }
+  },
+  "required": []
+}

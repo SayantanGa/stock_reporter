@@ -1,0 +1,37 @@
+{
+    "actorSpecification": 1,
+    "name": "market-reaction-intelligence",
+    "title": "Market Reaction Intelligence",
+    "version": "2.2.0",
+    "dockerfile": "./Dockerfile",
+    "input": "./input_schema.json",
+    "storages": {
+        "dataset": {
+            "actorSpecification": 1,
+            "title": "Market Moves",
+            "views": {
+                "overview": {
+                    "title": "Overview",
+                    "transformation": {
+                        "fields": [
+                            "ticker",
+                            "pctChange",
+                            "reason_summary",
+                            "event_class",
+                            "timestamp"
+                        ]
+                    },
+                    "display": {
+                        "component": "table",
+                        "columns": [
+                            { "label": "Ticker", "field": "ticker" },
+                            { "label": "Change %", "field": "pctChange" },
+                            { "label": "Reason", "field": "reason_summary" },
+                            { "label": "Event", "field": "event_class" }
+                        ]
+                    }
+                }
+            }
+        }
+    }
+}
