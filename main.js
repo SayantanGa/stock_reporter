@@ -295,7 +295,7 @@ const htmlContent = `
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Market Intelligence Brief</title>
+    <meta charset="UTF-8"><title>Market Intelligence Brief</title>
     <style>
         body { font-family: -apple-system, system-ui, sans-serif; max-width: 800px; margin: 40px auto; padding: 20px; line-height: 1.6; }
         h1 { border-bottom: 2px solid #eee; padding-bottom: 10px; }
