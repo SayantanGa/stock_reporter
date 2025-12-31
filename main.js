@@ -58,7 +58,7 @@ try {
 }
 
 const turndownService = new TurndownService();
-const dataset = await Actor.openDataset('MARKET-MOVES');
+const dataset = await Actor.openDataset();
 const finalResults = [];
 
 // --- 2. TARGET IDENTIFICATION ---

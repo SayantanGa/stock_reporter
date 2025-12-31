@@ -20,6 +20,7 @@
       "title": "Volatility Threshold (%)",
       "type": "number",
       "description": "Minimum move percentage to trigger analysis.",
+      "editor": "number",
       "default": 3.0
     },
     "openaiApiKey": {
