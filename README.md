@@ -54,8 +54,7 @@ You can mix and match tickers from different countries and choose your alert met
 | `geminiApiKey` | String | Key for Google Gemini. |
 | `anthropicApiKey`| String | Key for Claude. |
 | `discordWebhook` | String | URL for Discord channel alerts. |
-| `sendEmail` | Boolean | Set to `true` to receive email reports. |
-| `recipientEmail` | String | (Optional) Email address. Defaults to your Apify account email. |
+| `sendEmail` | Boolean | Set to `true` to receive email reports (sent to your Apify account email). |
 
 **Example Input:**
 ```json
