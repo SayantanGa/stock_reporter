@@ -23,7 +23,6 @@ const {
     maxNewsPerTicker = 3, 
     discordWebhook,
     sendEmail,
-    recipientEmail,
     proxyConfiguration,
 
     // AI Configuration
@@ -34,7 +33,7 @@ const {
     anthropicModel = "claude-3-haiku-20240307",
     
     geminiApiKey,
-    geminiModel = "gemini-1.5-flash",
+    geminiModel = "gemini-2.5-flash-lite",
     
     openRouterKey = process.env.OPENROUTER_API_KEY, // Keep as fallback
     openRouterModel = "google/gemma-3-27b-it:free",
@@ -292,17 +291,13 @@ for (const stock of volatileStocks) {
     }
 
     // FEATURE 3: Email Notification 
+    // FEATURE 3: Email Notification (Owner Only)
     if (sendEmail) {
         try {
-            // 1. Determine the recipient
-            let userEmail = recipientEmail;
-
-            // 2. If no recipient provided, fetch the owner's email via Client
-            if (!userEmail) {
-                const client = Actor.newClient();
-                const user = await client.user().get();
-                userEmail = user?.email;
-            }
+            // Automatically get the email of the user running this actor
+            const client = Actor.newClient();
+            const user = await client.user().get();
+            const userEmail = user?.email;
             
             if (userEmail) {
                 console.log(`   📧 Sending email to ${userEmail}...`);
@@ -321,7 +316,7 @@ for (const stock of volatileStocks) {
                     `
                 });
             } else {
-                console.warn("   ⚠️ Email enabled but no recipient found.");
+                console.warn("   ⚠️ Could not detect user email (Are you running locally without login?).");
             }
         } catch (e) {
             console.error(`   ❌ Failed to send email: ${e.message}`);

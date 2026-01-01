@@ -63,12 +63,6 @@
         "description": "If enabled, sends an email for every detected event.",
         "default": false
     },
-    "recipientEmail": {
-        "title": "Recipient Email (Optional)",
-        "type": "string",
-        "description": "Email address to receive alerts. Defaults to your Apify account email.",
-        "editor": "textfield"
-    },
     "proxyConfiguration": {
       "title": "Proxy Configuration",
       "type": "object",
