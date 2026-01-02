@@ -60,8 +60,14 @@
     "sendEmail": {
         "title": "Send Email Alerts",
         "type": "boolean",
-        "description": "If enabled, sends an email for every detected event.",
+        "description": "If enabled, sends an email report.",
         "default": false
+    },
+    "recipientEmail": {
+        "title": "Recipient Email",
+        "type": "string",
+        "description": "Required if 'Send Email' is checked. The address to receive alerts.",
+        "editor": "textfield"
     },
     "proxyConfiguration": {
       "title": "Proxy Configuration",
