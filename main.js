@@ -14,6 +14,14 @@ import { GoogleGenerativeAI } from '@google/generative-ai';
 dotenv.config();
 await Actor.init();
 
+process.on('uncaughtException', (err) => {
+    if (err.code === 'ECONNRESET') {
+        console.warn('⚠️ Ignored ECONNRESET during shutdown');
+    } else {
+        throw err;
+    }
+});
+
 // --- 1. CONFIGURATION ---
 const input = await Actor.getInput() || {};
 const { 
@@ -163,9 +171,22 @@ function cleanAndParseJSON(text) {
 }
 
 async function analyzeStockEvent(ticker, pctChange, context) {
-    const systemPrompt = `You are a financial analyst.
-    Analyze why ${ticker} moved ${pctChange.toFixed(2)}%.
-    Return STRICT JSON: {"reason_summary": "Factual 1-sentence explanation", "event_class": "EARNINGS|MERGER|MACRO|PRODUCT|UNKNOWN"}`;
+    const systemPrompt = `You are a professional equity markets analyst.
+
+Explain why ${ticker} moved ${pctChange.toFixed(2)}% today.
+
+If no specific company news exists:
+- Explain the move using market-wide factors
+- Mention profit-taking, index movement, or normal volatility
+- Do NOT invent events
+- Keep it factual and readable
+
+Return STRICT JSON:
+{
+  "reason_summary": "Clear 1–2 sentence explanation suitable for retail investors",
+  "event_class": "EARNINGS|MERGER|MACRO|MARKET_DRIFT|VOLATILITY|UNKNOWN"
+}
+`;
     
     const userMessage = `CONTEXT:\n${context.substring(0, 12000)}`;
 
@@ -200,11 +221,17 @@ async function analyzeStockEvent(ticker, pctChange, context) {
             const genAI = new GoogleGenerativeAI(geminiApiKey);
             const model = genAI.getGenerativeModel({ 
                 model: geminiModel,
-                generationConfig: { responseMimeType: "application/json" }
+                generationConfig: {
+                    temperature: 0.2,
+                    maxOutputTokens: 512
+                }
             });
-            const result = await model.generateContent(systemPrompt + "\n\n" + userMessage);
+        
+            const result = await model.generateContent(
+                systemPrompt + "\n\n" + userMessage
+            );
             rawResponse = result.response.text();
-        }
+        }        
 
         // D. OPENROUTER (Fallback)
         else if (openRouterKey) {
